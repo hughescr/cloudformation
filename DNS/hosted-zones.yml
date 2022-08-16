@@ -1,0 +1,93 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Route53 Hosted Zones for all my domains"
+
+Outputs:
+  PanopComExport:
+    Description: The hosted zone ID for the panop.com domain
+    Value: !Ref PanopCom
+    Export:
+      Name: PanopCom-HostedZoneId
+
+  CienegaOrchardsComExport:
+    Description: The hosted zone ID for the cienegaorchards.com domain
+    Value: !Ref CienegaOrchardsCom
+    Export:
+      Name: CienegaOrchardsCom-HostedZoneId
+
+  RungieComExport:
+    Description: The hosted zone ID for the rungie.com domain
+    Value: !Ref RungieCom
+    Export:
+      Name: RungieCom-HostedZoneId
+
+  TrickplayComExport:
+    Description: The hosted zone ID for the trickplay.com domain
+    Value: !Ref TrickplayCom
+    Export:
+      Name: TrickplayCom-HostedZoneId
+
+  HughesFamilyOrgExport:
+    Description: The hosted zone ID for the hughes-family.org domain
+    Value: !Ref HughesFamilyOrg
+    Export:
+      Name: HughesFamilyOrg-HostedZoneId
+
+  WaysideRdOrgExport:
+    Description: The hosted zone ID for the waysiderd.org domain
+    Value: !Ref WaysideRdOrg
+    Export:
+      Name: WaysideRdOrg-HostedZoneId
+
+  ImagineDAOFundExport:
+    Description: The hosted zone ID for the imaginedao.fund domain
+    Value: !Ref ImagineDAOFund
+    Export:
+      Name: ImagineDAOFund-HostedZoneId
+
+  VoteForCraigOrgExport:
+    Description: The hosted zone ID for the voteforcraig.org domain
+    Value: !Ref VoteForCraigOrg
+    Export:
+      Name: VoteForCraigOrg-HostedZoneId
+
+Resources:
+  PanopCom:
+    Type: "AWS::Route53::HostedZone"
+    Properties:
+      Name: "panop.com."
+
+  CienegaOrchardsCom:
+    Type: "AWS::Route53::HostedZone"
+    Properties:
+      Name: "cienegaorchards.com."
+
+  RungieCom:
+    Type: "AWS::Route53::HostedZone"
+    Properties:
+      Name: "rungie.com."
+
+  TrickplayCom:
+    Type: "AWS::Route53::HostedZone"
+    Properties:
+      Name: "trickplay.com."
+
+  HughesFamilyOrg:
+    Type: "AWS::Route53::HostedZone"
+    Properties:
+      Name: "hughes-family.org."
+
+  WaysideRdOrg:
+    Type: "AWS::Route53::HostedZone"
+    Properties:
+      Name: "waysiderd.org."
+
+  ImagineDAOFund:
+    Type: "AWS::Route53::HostedZone"
+    Properties:
+      Name: "imaginedao.fund."
+
+  VoteForCraigOrg:
+    Type: "AWS::Route53::HostedZone"
+    Properties:
+      Name: "voteforcraig.org."
+
