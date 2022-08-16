@@ -8,8 +8,15 @@ Parameters:
     Description: The domain name which should be redirected to www.domain.tld
   Route53HostedZoneId:
     Type: String
-    Default: Z07810231DDEC8OFM2QCD
-    Description: The HostedZoneId of the already-existing domain above in Route53 - needed for CertificateManager which can't use the DomainName to look up the zone
+    Default: Z123456ABCDE or $SomeExport
+    Description: The HostedZoneId of the already-existing domain above in Route53 or $SomeExport to fetch the ZoneId from a cloudformation export
+
+Conditions:
+  Route53ZoneIdParamIsImported:
+    !And [
+      !Not [ !Equals [ !Ref Route53HostedZoneId , ""]],
+      !Equals [ !Select [ 0, !Split [ "$", !Ref Route53HostedZoneId ]], ""]
+    ]
 
 Resources:
   S3Bucket:
@@ -32,7 +39,12 @@ Resources:
       Region: us-east-1
       DomainValidationOptions:
         - DomainName: !Ref DomainName
-          HostedZoneId: !Ref Route53HostedZoneId
+          HostedZoneId:
+            !If
+              - Route53ZoneIdParamIsImported
+              - Fn::ImportValue:
+                  !Select [ 1, !Split [ "$", !Ref Route53HostedZoneId ]]
+              - !Ref Route53HostedZoneId
       ServiceToken: !ImportValue 'CertificateAccepterLambda-Arn'
 
   CloudFrontDistribution:
