@@ -50,6 +50,18 @@ Outputs:
     Export:
       Name: VoteForCraigOrg-HostedZoneId
 
+  EricaSHughesComExport:
+    Description: The hosted zone ID for the ericashughes.com domain
+    Value: !Ref EricaSHughesCom
+    Export:
+      Name: EricaSHughesCom-HostedZoneId
+
+  EvanHughesFishExport:
+    Description: The hosted zone ID for the evanhughes.fish domain
+    Value: !Ref EvanHughesFish
+    Export:
+      Name: EvanHughesFish-HostedZoneId
+
 Resources:
   PanopCom:
     Type: "AWS::Route53::HostedZone"
@@ -91,3 +103,12 @@ Resources:
     Properties:
       Name: "voteforcraig.org."
 
+  EricaSHughesCom:
+    Type: "AWS::Route53::HostedZone"
+    Properties:
+      Name: "ericashughes.com"
+
+  EvanHughesFish:
+    Type: "AWS::Route53::HostedZone"
+    Properties:
+      Name: "evanhughes.fish"
