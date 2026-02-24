@@ -62,6 +62,12 @@ Outputs:
     Export:
       Name: EvanHughesFish-HostedZoneId
 
+  PocketJesusOrgExport:
+    Description: The hosted zone ID for the pocketjesus.org domain
+    Value: !Ref PocketJesusOrg
+    Export:
+      Name: PocketJesusOrg-HostedZoneId
+
 Resources:
   PanopCom:
     Type: "AWS::Route53::HostedZone"
@@ -112,3 +118,8 @@ Resources:
     Type: "AWS::Route53::HostedZone"
     Properties:
       Name: "evanhughes.fish"
+
+  PocketJesusOrg:
+    Type: "AWS::Route53::HostedZone"
+    Properties:
+      Name: "pocketjesus.org"
