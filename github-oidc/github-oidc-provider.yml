@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: 2010-09-09
+# CloudFormation limits Description to 1024 bytes, so the full consumer role example lives in the comment below.
+Description: |-
+  Shared IAM OIDC provider for GitHub Actions. An account can have only ONE provider for this URL, so deploy once
+  and import it; do not create another in a site stack.
+  Consume it with an IAM role whose trust policy has Principal Federated: !ImportValue 'GitHubOIDCProvider-Arn',
+  Action sts:AssumeRoleWithWebIdentity, Condition StringEquals token.actions.githubusercontent.com:aud =
+  sts.amazonaws.com and StringLike token.actions.githubusercontent.com:sub = repo:OWNER/REPO:ref:refs/heads/BRANCH.
+  The importing stack must be in this stack's region (exports are per-region).
+  CloudFormation blocks deleting this stack while any stack imports the export.
+  List users: aws cloudformation list-imports --export-name GitHubOIDCProvider-Arn
+  Delete this stack only when that list is empty.
+
+# Example role in a site stack (substitute OWNER/REPO/BRANCH). Always pin the sub claim to a specific repo and
+# branch or environment: the provider alone trusts every GitHub repository, the role's Condition is what restricts
+# who can assume it. The workflow needs `permissions: id-token: write` and aws-actions/configure-aws-credentials
+# with role-to-assume set to this role.
+#
+#   Type: AWS::IAM::Role
+#   Properties:
+#     AssumeRolePolicyDocument:
+#       Version: '2012-10-17'
+#       Statement:
+#         - Effect: Allow
+#           Principal:
+#             Federated: !ImportValue 'GitHubOIDCProvider-Arn'
+#           Action: sts:AssumeRoleWithWebIdentity
+#           Condition:
+#             StringEquals:
+#               token.actions.githubusercontent.com:aud: sts.amazonaws.com
+#             StringLike:
+#               token.actions.githubusercontent.com:sub: repo:OWNER/REPO:ref:refs/heads/BRANCH
+
+Outputs:
+  GitHubOIDCProviderArn:
+    Description: The ARN of the IAM OIDC provider for GitHub Actions, for use as the Federated principal of a role trust policy (see the comment at the top of this template)
+    Value: !Ref GitHubOIDCProvider
+    Export:
+      Name: GitHubOIDCProvider-Arn
+
+Resources:
+  GitHubOIDCProvider:
+    Type: AWS::IAM::OIDCProvider
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ClientIdList:
+        - sts.amazonaws.com
+      # ThumbprintList is deliberately omitted: it is optional, and for GitHub's issuer AWS validates the
+      # certificate chain against its own library of trusted root CAs instead of a pinned thumbprint.
+      Tags:
+        - Key: Purpose
+          Value: GitHub Actions OIDC for site deploys
